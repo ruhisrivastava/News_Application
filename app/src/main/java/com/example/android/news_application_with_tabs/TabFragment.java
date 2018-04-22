@@ -34,14 +34,12 @@ import com.example.android.news_application_with_tabs.utils.AppConstants;
 public class TabFragment extends Fragment{
 
     private List<Item> item;
-    private static final String EXTRA_KEY = "extra";
     private int position;
-    static String articleId;
     private ProgressDialog progressBar;
-    StringRequest strReq;
+    private StringRequest strReq;
 
-    public static final String TAG = TabFragment.class.getName();
-    public String URL ="http://la-ios.trb.com/v1/content/?market_id=1&content_profile=22&structure=full&section_id=543&include_embedded_items=true&include_related=false&include_child=true&child_count=1";
+    private static final String TAG = TabFragment.class.getName();
+    private String URL ="http://la-ios.trb.com/v1/content/?market_id=1&content_profile=22&structure=full&section_id=543&include_embedded_items=true&include_related=false&include_child=true&child_count=1";
     private RecyclerView recyclerView;
     private ArticleAdapter adapter;
     private static MainData mMainData;
@@ -85,28 +83,28 @@ public class TabFragment extends Fragment{
 
     }
 
-     public static MainData toPoJo(String response) {
+    /*  public static MainData toPoJo(String response) {
         Gson gson = new Gson();
         mMainData = gson.fromJson(response, MainData.class);
         return mMainData;
-    }
-
-  /*  public void toPoJo(String response) {
-        Gson gson = new Gson();
-        mMainData = gson.fromJson(response, MainData.class);
     }*/
 
-    public void getNetworkData(){
+    private void toPoJo(String response) {
+        Gson gson = new Gson();
+        mMainData = gson.fromJson(response, MainData.class);
+    }
+
+    private void getNetworkData(){
         if(position==1)
             URL ="http://la-ios.trb.com/v1/content/?market_id=1&content_profile=22&structure=full&section_id=606&include_embedded_items=false&include_related=false&include_child=true&child_count=1";
         else
             URL = "http://la-ios.trb.com/v1/content/?market_id=1&content_profile=22&structure=full&section_id=543&include_embedded_items=true&include_related=false&include_child=true&child_count=1";
-        showProgressBar(R.string.loading);
+        showProgressBar();
 
         strReq = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(NetworkResponse response) {
+                    public void onResponse(String response) {
                         Log.d(TAG, "response " + response);
                         toPoJo(response);
                         item = mMainData.getItems();
@@ -133,12 +131,12 @@ public class TabFragment extends Fragment{
 
 
 
-    public void showProgressBar(int title) {
+    private void showProgressBar() {
         if (progressBar == null) {
             progressBar = new ProgressDialog(getContext());
         }
-        if (title != -1) {
-            progressBar.setTitle(title);
+        if (R.string.loading != -1) {
+            progressBar.setTitle(R.string.loading);
         }
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressBar.setIndeterminate(true);
@@ -146,7 +144,7 @@ public class TabFragment extends Fragment{
         progressBar.show();
     }
 
-    public void hideProgressBar() {
+    private void hideProgressBar() {
         if (progressBar != null) {
             progressBar.dismiss();
         }
@@ -155,7 +153,6 @@ public class TabFragment extends Fragment{
 
     public void articleClicked(String id, String title, String desc)
     {
-        articleId =id;
         Intent intent = new Intent(getActivity(), ArticleActivity.class);
         intent.putExtra(AppConstants.ARTICLE_ID,id);
         intent.putExtra(AppConstants.ARTICLE_TITLE,title);
@@ -164,4 +161,3 @@ public class TabFragment extends Fragment{
     }
 
 }
-

@@ -15,10 +15,22 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
         super(supportFragmentManager);
     }
 
+  /*public Fragment getItem(int position) {
+      TabFragment fragment = new TabFragment();
+      Bundle bundle = new Bundle();
+      bundle.putInt("position", position);
+      fragment.setArguments(bundle);
+      return fragment;
+  }*/
+
     @Override
     public Fragment getItem(int position) {
 
-        return TabFragment.newInstance(position);
+        TabFragment fragment = new TabFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
